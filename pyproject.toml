@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "langchain-bilinc"
+version = "0.1.0"
+description = "LangChain memory tools and retriever for Bilinc agent memory."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "ReARC Labs Inc." }]
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "langchain-core>=1.4.7,<2.0.0",
+    "bilinc>=2.7.3,<3",
+]
+keywords = ["langchain", "bilinc", "memory", "agents", "retriever"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.urls]
+Homepage = "https://bilinc.space"
+Documentation = "https://bilinc.space/docs"
+Repository = "https://github.com/ReARCLabs/bilinc-langchain"
+Issues = "https://github.com/ReARCLabs/bilinc-langchain/issues"
+
+[dependency-groups]
+test = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "langchain-tests>=1.1.9,<2.0.0",
+]
+lint = ["ruff>=0.13"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["langchain_bilinc"]
+
+[tool.hatch.build.targets.sdist]
+include = ["langchain_bilinc/", "tests/", "README.md", "LICENSE"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
