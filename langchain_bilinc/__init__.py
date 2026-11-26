@@ -2,7 +2,7 @@
 
 from importlib import metadata
 
-from langchain_bilinc.retrievers import BilincRetriever
+from langchain_bilinc.retrievers import BilincRetriever, BilincRetrieverError
 from langchain_bilinc.tools import (
     BilincRecall,
     BilincRecallInput,
@@ -21,5 +21,6 @@ __all__ = [
     "BilincRemember",
     "BilincRememberInput",
     "BilincRetriever",
+    "BilincRetrieverError",
     "__version__",
 ]

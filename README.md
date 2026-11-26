@@ -72,6 +72,13 @@ for doc in docs:
 
 `page_content` is the stored value; JSON values are serialized. `metadata` holds `key`, `memory_type`, `importance`, `score`, `source`, `entry_version` and `updated_at` when the service returns them.
 
+Bilinc's limits are applied before the call:
+- `k` (on the retriever or per call) is capped at 100.
+- The query is cut at 4,096 characters.
+- A blank query returns no documents.
+
+A failed recall is logged as a warning and raised as `BilincRetrieverError`, with the SDK error as its cause.
+
 ## Errors and costs
 
 Tool errors are raised as `ToolException` (set `handle_tool_error=True` to return them to the model). A failed save means nothing was saved. Saves and recalls use Bilinc credits; see [pricing](https://bilinc.space/pricing).
