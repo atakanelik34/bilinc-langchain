@@ -10,7 +10,12 @@ from langchain_core.callbacks import CallbackManagerForToolRun
 from langchain_core.tools import BaseTool, ToolException
 from pydantic import BaseModel, Field
 
-from langchain_bilinc._client import BilincClientMixin, recall_results, value_to_text
+from langchain_bilinc._client import (
+    BilincClientMixin,
+    _session_field,
+    recall_results,
+    value_to_text,
+)
 
 MemoryType = Literal["episodic", "procedural", "semantic", "working", "spatial"]
 RecallProfile = Literal["fast", "balanced", "verified", "deep"]
@@ -76,6 +81,7 @@ class BilincRemember(BilincClientMixin, BaseTool):
     """The "saved by" label stored with each memory."""
 
     session_id: str | None = None
+    """Session stored with each memory; over 256 characters (Bilinc's limit) it is hashed."""
     metadata: dict[str, Any] | None = None
     """Extra metadata stored with every memory this tool writes."""
 
@@ -102,7 +108,7 @@ class BilincRemember(BilincClientMixin, BaseTool):
                 importance=self.default_importance if importance is None else importance,
                 metadata=dict(self.metadata or {}),
                 source=self.source,
-                session_id=self.session_id,
+                session_id=_session_field(self.session_id),
             )
         except BilincError as exc:
             raise ToolException(f"Memory was not saved: {exc}") from exc

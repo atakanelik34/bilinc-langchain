@@ -56,6 +56,7 @@ agent = create_agent(
 - Writing to an existing key replaces its value; Bilinc keeps the earlier value in that memory's history.
 - Without a `key`, the tool derives a stable key from the value, so saving the same value twice writes the same key.
 - Options: `key_prefix`, `default_memory_type` (`semantic`), `default_importance` (`1.0`), `source` (`"langchain"`), `session_id`, `metadata`.
+- `session_id` is trimmed, and a blank one is not sent. One longer than 256 characters (Bilinc's limit) is sent as its hash.
 
 `BilincRecall` options: `limit` (`5`), `profile` (`fast`, `balanced`, `verified`, `deep`; higher profiles depend on your plan), `memory_types`.
 

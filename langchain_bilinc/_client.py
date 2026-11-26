@@ -2,12 +2,34 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from typing import Any
 
 from bilinc import CloudClient
 from langchain_core.utils import secret_from_env
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, SecretStr
+
+# The Bilinc server rejects a longer sessionId: it validates session_id with
+# max_length=256 (Bilinc Cloud, cloud/service.py:63). The SDK does not check it.
+# Same constant and helpers as in llama-index-memory-bilinc.
+MAX_SESSION_ID_LENGTH = 256
+
+
+def _session_hash(session_id: str) -> str:
+    return "h" + hashlib.sha256(session_id.encode("utf-8")).hexdigest()[:24]
+
+
+def _session_field(session_id: str | None) -> str | None:
+    """The session as sent to Bilinc: trimmed, None if blank, hashed if too long."""
+    if session_id is None:
+        return None
+    session_id = session_id.strip()
+    if not session_id:
+        return None
+    if len(session_id) <= MAX_SESSION_ID_LENGTH:
+        return session_id
+    return _session_hash(session_id)
 
 
 class BilincClientMixin(BaseModel):
