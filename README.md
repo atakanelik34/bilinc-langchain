@@ -75,9 +75,9 @@ for doc in docs:
 Bilinc's limits are applied before the call:
 - `k` (on the retriever or per call) is capped at 100.
 - The query is cut at 4,096 characters.
-- A blank query returns no documents.
+- A `k` of 0 or less, or a blank query, returns no documents without a call (so no credit is used).
 
-A failed recall is logged as a warning and raised as `BilincRetrieverError`, with the SDK error as its cause.
+A failed recall raises the SDK's own error (`bilinc.BilincRateLimitError`, `bilinc.BilincAuthError`, ...), so `except bilinc.BilincError` catches it.
 
 ## Errors and costs
 
